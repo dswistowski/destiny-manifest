@@ -1,0 +1,33 @@
+{
+  "name": "@dswistowski/destiny-manifest",
+  "version": "0.0.1",
+  "main": "src/index.tsx",
+  "access": "public",
+  "license": "MIT",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts",
+    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts",
+    "lint": "eslint src/*.ts*",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@vitest/coverage-c8": "^0.24.1",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "fake-indexeddb": "^4.0.0",
+    "jsdom": "^20.0.1",
+    "tsconfig": "workspace:*",
+    "tsup": "^6.2.3",
+    "typescript": "^4.5.2",
+    "vitest": "^0.24.1",
+    "vitest-fetch-mock": "^0.2.1"
+  },
+  "dependencies": {
+    "bungie-api-ts": "^4.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

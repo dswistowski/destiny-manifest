@@ -1,0 +1,9 @@
+{
+  "extends": "tsconfig/library.json",
+
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "types": ["vitest/globals"]
+  }
+}
