@@ -9,11 +9,11 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "dev:packages": "turbo run dev --filter='./packages/*'",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "publish-packages": "turbo run build lint test && changeset version && changeset publish"
-
   },
   "devDependencies": {
     "@changesets/cli": "^2.25.0",

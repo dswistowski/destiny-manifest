@@ -16,6 +16,7 @@ const manifest = createDefaultManifest({
   loader,
   apiKey: "95ff63b2566b4c19ac6b06b0123d8014",
   language: "en",
+  dbName: "test-app",
 });
 
 function debounce<T extends (...args: any[]) => any>(fn: T, ms: number) {

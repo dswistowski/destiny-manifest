@@ -13,6 +13,7 @@ export type {
   Language,
   Loader,
   inferDomains,
+  State
 } from "./types";
 export type { Database } from "../database";
 export { inMemoryDBFactory } from "../database";
