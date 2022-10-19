@@ -1,5 +1,6 @@
 import {
-  createDefaultManifest, createVolatileManifest,
+  createDefaultManifest,
+  createVolatileManifest,
   createLoader,
   inferDomains,
 } from "@dswistowski/destiny-manifest-react";

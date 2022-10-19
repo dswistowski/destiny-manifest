@@ -31,7 +31,7 @@ export const allLanguages: Language[] = [
   "ko",
   "zh-cht",
   "zh-chs",
-]
+];
 
 export type Manifest = {
   DestinyNodeStepSummaryDefinition: destiny2.DestinyNodeStepDefinition & {
