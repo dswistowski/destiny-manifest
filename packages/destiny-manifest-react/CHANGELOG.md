@@ -1,5 +1,13 @@
 # @dswistowski/destiny-manifest-react
 
+## 0.0.3
+
+### Patch Changes
+
+- export languages
+- Updated dependencies
+  - @dswistowski/destiny-manifest@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes
