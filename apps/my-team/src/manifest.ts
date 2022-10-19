@@ -4,6 +4,7 @@ import {
   inferDomains,
 } from "@dswistowski/destiny-manifest-react";
 import { BUNGIE_API_KEY } from "./config";
+import { store } from "./store";
 
 const loader = createLoader()
   .add("DestinyInventoryItemDefinition", (item) => item)
@@ -18,10 +19,13 @@ const loader = createLoader()
     order: bucket.bucketOrder,
   }));
 
-export const manifest = createVolatileManifest({
+const language = store.getState().language;
+
+export const manifest = createDefaultManifest({
   loader,
   apiKey: BUNGIE_API_KEY,
-  language: "en",
+  language,
+  dbName: "my-team",
 });
 
 export type Domains = inferDomains<typeof loader>;

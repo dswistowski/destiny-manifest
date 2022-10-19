@@ -6,7 +6,7 @@ export type {
   Language,
   Loader,
 } from "@dswistowski/destiny-manifest";
-export { createLoader } from "@dswistowski/destiny-manifest";
+export { createLoader, allLanguages } from "@dswistowski/destiny-manifest";
 
 import {
   createBungieClient,
@@ -75,6 +75,7 @@ const createManifest = <L extends Loader>(config: ManifestConfig<L>) => {
       () => manifest.get(definition, key),
       [definition, key]
     );
+
     return useAsyncLoader(getter);
   };
 
@@ -124,20 +125,21 @@ const createManifest = <L extends Loader>(config: ManifestConfig<L>) => {
   ) as GeneratedMultiHooks<Processors>;
 
   const manifest = createBaseManifest(config);
-  
-  const makeHookFromSelector = <T,>(selector: (state: State) => T ) => {
-    return (): T => {
-    const [slice, setSlice] = React.useState<T>(selector(manifest.store.getState()));
-    useEffect(() => {
-      console.log("useEffect 1");
-      return manifest.store.subscribe(() => {
-        setSlice(selector(manifest.store.getState()));
-      })
-    }, [selector]);
-    return slice
-  }
 
-  }
+  const makeHookFromSelector = <T,>(selector: (state: State) => T) => {
+    return (): T => {
+      const [slice, setSlice] = React.useState<T>(
+        selector(manifest.store.getState())
+      );
+      useEffect(() => {
+        console.log("useEffect 1");
+        return manifest.store.subscribe(() => {
+          setSlice(selector(manifest.store.getState()));
+        });
+      }, [selector]);
+      return slice;
+    };
+  };
 
   return {
     ...manifest,
@@ -145,11 +147,9 @@ const createManifest = <L extends Loader>(config: ManifestConfig<L>) => {
     useDefinitions,
     ...singleHooks,
     ...multiHooks,
-    useReady: makeHookFromSelector( (state: State) => state.isReady)
+    useReady: makeHookFromSelector((state: State) => state.isReady),
   };
 };
-
-
 
 type PromiseResult<P> = P extends (...args: any[]) => Promise<infer R>
   ? R
@@ -170,14 +170,16 @@ const useAsyncLoader = <
     setLoading(true);
     console.log("useEffect 2", future);
     future()
-      .then((data) => {if(!cancelled) setData(data)})
+      .then((data) => {
+        if (!cancelled) setData(data);
+      })
       .catch(setError)
       .finally(() => {
         setLoading(false);
       });
     return () => {
       cancelled = true;
-    }
+    };
   }, [future]);
 
   return { data: data as R | undefined, loading, error };
