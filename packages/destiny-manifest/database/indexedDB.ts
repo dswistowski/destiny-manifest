@@ -97,18 +97,24 @@ export const indexedDBFactory = <D>(
         return async () => {};
       }
       alreadyOpening = true;
+      console.debug("real initialize");
       const tables = datasets.map((d) => `${String(d)}`);
       db = await makeDb(name, 1, tables);
 
       const hashes = generateHashes(processors, version, language, hashSeed);
-      const versions = Object.fromEntries(
-        (
-          (await getAll(db, VERSIONS_TABLE)) as {
-            name: keyof D;
-            hash: number;
-          }[]
-        ).map(({ name, hash }) => [name, hash])
-      );
+      let versions: {
+        [k: string]: number;
+      } = {};
+      try {
+        versions = Object.fromEntries(
+          (
+            (await getAll(db, VERSIONS_TABLE)) as {
+              name: keyof D;
+              hash: number;
+            }[]
+          ).map(({ name, hash }) => [name, hash])
+        );
+      } catch (e) {}
 
       if (
         !areFlatSetsEqual(
@@ -179,10 +185,23 @@ export const indexedDBFactory = <D>(
 
 const getAll = async <R>(db: IDBDatabase, store: string) => {
   return new Promise<R[]>((resolve, reject) => {
+    console.debug("getAll", store);
+    let resolved = false;
     const transaction = db.transaction([store], "readonly");
     const objectStore = transaction.objectStore(store);
     const request = objectStore.getAll();
-    transaction.oncomplete = () => resolve(request.result);
+
+    setTimeout(() => {
+      if (!resolved) {
+        console.debug("getAll timed out");
+        reject("getAll timed out");
+      }
+    }, 5000);
+
+    transaction.oncomplete = () => {
+      resolved = true;
+      resolve(request.result);
+    };
     transaction.onerror = reject;
   });
 };
@@ -237,6 +256,7 @@ const getKeys = async <R>(
 };
 
 const get = async <R>(db: IDBDatabase, store: string, keys: string[]) => {
+  console.log("get");
   return new Promise<R[]>((resolve, reject) => {
     const transaction = db.transaction([store], "readonly");
     const objectStore = transaction.objectStore(store);

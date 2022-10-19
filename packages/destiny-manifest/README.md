@@ -19,7 +19,7 @@ const loader = createLoader()
   // add function is typed, you IDE will help you with options
   .add("DestinyInventoryBucketDefinition", (r) => ({
     hash: r.hash,
-    displayProperties: r.displayProperties
+    displayProperties: r.displayProperties,
   }))
   .add("DestinyInventoryItemDefinition", (r) => r);
 
@@ -29,19 +29,21 @@ const loader = createLoader()
 const manifest = createDefaultManifest({
   loader,
   apiKey: process.env.BUNGIE_API_KEY,
-  language: "en"
+  language: "en",
 });
-
 
 manifest.triggers.onReady(async () => {
   // manifest.get, manifest.findMany, manifest.getMany are typesafe
   // they will return what you did define in your loader
-  const bucket = await manifest.get("DestinyInventoryBucketDefinition", 1469714392);
+  const bucket = await manifest.get(
+    "DestinyInventoryBucketDefinition",
+    1469714392
+  );
   console.log(bucket);
   const items = await manifest.findMany(
-    "DestinyInventoryItemDefinition", 
-    inventoryItem => inventoryItem.inventory.bucketTypeHash === bucket.hash
-  )
+    "DestinyInventoryItemDefinition",
+    (inventoryItem) => inventoryItem.inventory.bucketTypeHash === bucket.hash
+  );
   console.log(items);
 });
 ```

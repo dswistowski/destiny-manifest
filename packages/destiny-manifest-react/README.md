@@ -42,13 +42,14 @@ export const manifest = createDefaultManifest({
 export type Domains = inferDomains<typeof loader>;
 ```
 
-
 And then use it in your application:
 
 ```tsx
 import { manifest, Domains } from "./manifest";
 
-const LoreDefinition: React.FC<{lore: Domains["DestinyLoreDefinition"]}> = ({ lore }) => {
+const LoreDefinition: React.FC<{ lore: Domains["DestinyLoreDefinition"] }> = ({
+  lore,
+}) => {
   return (
     <div>
       <h1>{lore.displayProperties.name}</h1>
@@ -57,7 +58,9 @@ const LoreDefinition: React.FC<{lore: Domains["DestinyLoreDefinition"]}> = ({ lo
   );
 };
 
-const ItemDefinition: React.FC<{item: Domains["DestinyInventoryItemDefinition"]}> = ({ item }) => {
+const ItemDefinition: React.FC<{
+  item: Domains["DestinyInventoryItemDefinition"];
+}> = ({ item }) => {
   const lore = manifest.useDestinyLoreDefinition(item.loreHash);
   return (
     <div>
@@ -73,7 +76,7 @@ const Items: React.FC = () => {
   return (
     <div>
       {items.map((item) => (
-        <ItemDefinition  key={item.hash} item={item} />
+        <ItemDefinition key={item.hash} item={item} />
       ))}
     </div>
   );

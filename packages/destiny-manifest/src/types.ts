@@ -17,6 +17,22 @@ export type Language =
   | "zh-cht"
   | "zh-chs";
 
+export const allLanguages: Language[] = [
+  "en",
+  "fr",
+  "es",
+  "es-mx",
+  "de",
+  "it",
+  "ja",
+  "pt-br",
+  "ru",
+  "pl",
+  "ko",
+  "zh-cht",
+  "zh-chs",
+];
+
 export type Manifest = {
   DestinyNodeStepSummaryDefinition: destiny2.DestinyNodeStepDefinition & {
     hash: string;
