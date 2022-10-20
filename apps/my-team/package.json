@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "VITE_BUNGIE_API_KEY=${PROD_BUNGIE_API_KEY} vite build && firebase deploy"
   },
   "dependencies": {
     "@dswistowski/destiny-manifest-react": "workspace:*",

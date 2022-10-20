@@ -2,7 +2,7 @@ import { expect, test, describe, afterEach } from "vitest";
 import { indexedDBFactory } from "./indexedDB";
 import "fake-indexeddb/auto";
 
-const getTables = async (name: string, version = 1) =>
+const getTables = async (name: string, version = 2) =>
   new Promise<DOMStringList>((resolve, reject) => {
     const open_request = indexedDB.open(name, version);
     open_request.onsuccess = () => {

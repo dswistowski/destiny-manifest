@@ -169,7 +169,8 @@ export const useSearchProfile = (namePrefix: string, page = 0) => {
         namePrefix,
       },
     ],
-    async () => fetchSearchProfile(namePrefix, page)
+    async () => fetchSearchProfile(namePrefix, page),
+    { enabled: !!namePrefix, }
   );
 };
 

@@ -1,3 +1,4 @@
+
 import type {
   LoaderParam,
   Language,
@@ -108,41 +109,31 @@ export const createManifest = <L extends Loader>(config: ManifestConfig<L>) => {
     return database
       .initialize(allSpecs, state.spec?.version || "")
       .then(async (postInitialize) => {
-        store.mutate((state) => ({ ...state, dbInitialized: true }));
         triggers.onReady(postInitialize);
+        store.mutate((state) => ({ ...state, dbInitialized: true }));
       });
   });
 
-  triggers.onDBInitialized((state) => {
-    Promise.all(
-      allSpecs.map(async <T extends keyof Processors>(spec: T) => {
-        if (database.processed(spec)) return;
-        console.debug(`Processing ${String(spec)}`);
-        const process = processors[spec] as Processor<L, T>;
-        const path = state?.spec?.worldContent[spec as ManifestDefinition];
-        if (!path) return;
+  triggers.onDBInitialized(async (state) => {
+    for (const spec of allSpecs) {
+      if (database.processed(spec)) continue;
+      console.debug(`Processing ${String(spec)}`);
+      const process = processors[spec] as Processor<L, typeof spec>;
+      const path = state?.spec?.worldContent[spec as ManifestDefinition];
+      if (!path) continue;
 
-        const response = await config.bungieClient(path);
-        const body = response.body;
-        if (!body) {
-          throw new Error(`Failed to fetch ${String(spec)}`);
-        }
-
-        return await processJsonStream<LoaderParam<L, T>>(
-          body.getReader(),
-          async (collected) => {
-            return await config.database.putMany(
-              spec,
-              collected
-                .map((record) => process(record))
-                .map((record) => [(record as ProcessedType<T>).hash, record])
-            );
-          }
-        );
-      })
-    ).then(() => {
-      store.mutate((state) => ({ ...state, isReady: true }));
-    });
+      const response = await config.bungieClient(path);
+      const body = response.body;
+      if (!body) {
+        throw new Error(`Failed to fetch ${String(spec)}`);
+      }
+      const bucket = []
+      const objects = (await response.json()) as Record<string, LoaderParam<L, typeof spec>>;
+      config.database.putMany(spec, (Object.values(objects).map((record) => process(record))
+        .map((record) => [`${(record as ProcessedType<typeof spec>).hash}`, record])))
+        
+    }
+    store.mutate((state) => ({ ...state, isReady: true }));
   });
   loadManifestSpec(
     config.bungieClient,

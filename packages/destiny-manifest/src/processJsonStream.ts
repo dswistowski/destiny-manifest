@@ -1,35 +1,40 @@
-export const processJsonStream = async <R>(
+export async function* processJsonStream<R>(
   reader: ReadableStreamDefaultReader<Uint8Array>,
-  onChunkCollected: (collected: R[]) => Promise<void>
-) => {
+) {
   let charsReceived = 0;
   let data = "";
-
   for (;;) {
-    const processed: (R & { hash: string })[] = [];
     const { done, value } = await reader.read();
+    
     if (done) {
       break;
     }
-    data += new TextDecoder().decode(value);
+    const decodedValue = new TextDecoder().decode(value)
+    data += decodedValue;
+    let processed = []
 
     let result: ReturnType<typeof findJsonObject>;
     do {
       result = findJsonObject(data);
-      data = result.data;
+      data = result.data
       if (result.hash) {
-        processed.push({ ...result.object, hash: result.hash });
+        processed.push({ ...result.object, hash: result.hash })
+        if(processed.length >= 1000) {
+          yield processed
+          processed = []
+        }
       }
     } while (result.hash);
+    if(processed.length) yield processed
+    processed = []
     charsReceived += value.length;
-    console.debug(
+    console.log(
       "chunk finished",
       charsReceived,
       "loaded",
-      processed.length,
-      "objects"
+      "objects",
+      data.length
     );
-    await onChunkCollected(processed);
   }
 };
 

@@ -1,6 +1,5 @@
 import {
   createDefaultManifest,
-  createVolatileManifest,
   createLoader,
   inferDomains,
 } from "@dswistowski/destiny-manifest-react";
@@ -27,6 +26,7 @@ export const manifest = createDefaultManifest({
   apiKey: BUNGIE_API_KEY,
   language,
   dbName: "my-team",
+  
 });
 
 export type Domains = inferDomains<typeof loader>;

@@ -132,7 +132,6 @@ const createManifest = <L extends Loader>(config: ManifestConfig<L>) => {
         selector(manifest.store.getState())
       );
       useEffect(() => {
-        console.log("useEffect 1");
         return manifest.store.subscribe(() => {
           setSlice(selector(manifest.store.getState()));
         });
@@ -168,7 +167,6 @@ const useAsyncLoader = <
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    console.log("useEffect 2", future);
     future()
       .then((data) => {
         if (!cancelled) setData(data);

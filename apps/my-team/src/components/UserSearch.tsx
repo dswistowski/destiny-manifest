@@ -58,7 +58,6 @@ const UserSearch: React.FC = () => {
     const debouncedNamePrefix = useDebounce(namePrefix, 500);
 
     useEffect(() => {
-        console.log("useEffect 4");
         setPage(0);
     }, [debouncedNamePrefix]);
 
@@ -74,7 +73,9 @@ const UserSearch: React.FC = () => {
                     value={namePrefix}
                     onChange={(e) => setNamePrefix(e.target.value)}
                 />
-                {isLoading && <Spinner className="w-8 h-8 text-gray-900" />}
+                {isLoading && debouncedNamePrefix && (
+                    <Spinner className="w-8 h-8 text-gray-900" />
+                )}
             </div>
 
             {data?.results?.length ? (

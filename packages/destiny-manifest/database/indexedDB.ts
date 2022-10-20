@@ -65,7 +65,6 @@ export const indexedDBFactory = <D>(
   language: string,
   hashSeed: number = 0x2f1a7f2d
 ): Database<D> => {
-  console.log("indexedDBFactory", name, language);
   let db: IDBDatabase | undefined = undefined;
   let alreadyOpening = false;
   const toRefresh = new Set<string>();
@@ -130,20 +129,20 @@ export const indexedDBFactory = <D>(
           .objectStore(VERSIONS_TABLE)
           .clear();
       }
-
+      
       Object.entries(hashes)
         .filter(([name, hash]) => versions[name] !== hash)
         .map(([name]) => name)
         .filter((name) => db?.objectStoreNames.contains(name))
         .forEach((name) => toRefresh.add(name));
       return async () => {
-        console.debug("put", hashes);
         await put(
           db!,
           VERSIONS_TABLE,
           Object.entries(hashes).map(([k, v]) => ({ name: k, hash: v }))
         );
       };
+
     },
     processed: (dataset) => !toRefresh.has(String(dataset)),
     get: async (dataset, key) => {
@@ -256,7 +255,6 @@ const getKeys = async <R>(
 };
 
 const get = async <R>(db: IDBDatabase, store: string, keys: string[]) => {
-  console.log("get");
   return new Promise<R[]>((resolve, reject) => {
     const transaction = db.transaction([store], "readonly");
     const objectStore = transaction.objectStore(store);
