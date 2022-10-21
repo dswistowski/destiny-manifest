@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import type {
   Activity,
   Equipment,
-  Instance,
   PartyMember,
   Perk,
   PlugState,
@@ -56,7 +55,6 @@ const fetchMemberInventory = async (
     membershipType,
     [100, 200, 205, 300, 302, 305, 306, 308]
   );
-  console.log(JSON.stringify(response));
   const characters = Object.values(
     response.Response.characters.data
   ) as DestinyCharacterComponent[];
@@ -169,8 +167,7 @@ export const useSearchProfile = (namePrefix: string, page = 0) => {
         namePrefix,
       },
     ],
-    async () => fetchSearchProfile(namePrefix, page),
-    { enabled: !!namePrefix, }
+    async () => fetchSearchProfile(namePrefix, page)
   );
 };
 

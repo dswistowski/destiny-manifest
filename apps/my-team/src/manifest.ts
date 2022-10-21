@@ -5,7 +5,6 @@ import {
 } from "@dswistowski/destiny-manifest-react";
 import { BUNGIE_API_KEY } from "./config";
 import { store } from "./store";
-
 const loader = createLoader()
   .add("DestinyInventoryItemDefinition", (item) => item)
   .add("DestinyBreakerTypeDefinition", (breaker) => breaker)
